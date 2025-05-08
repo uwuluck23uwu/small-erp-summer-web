@@ -1,0 +1,97 @@
+/* table-main start */
+div.table-main {
+  @apply overflow-x-auto;
+}
+
+div.table-main > table {
+  @apply min-w-full table-fixed;
+}
+
+div.table-main > table > thead > tr {
+  @apply bg-blue-200 text-gray-900;
+}
+
+div.table-main > table > thead > tr > th {
+  @apply border border-gray-300 p-3 text-start font-medium whitespace-nowrap;
+}
+
+div.table-main > table > tbody > tr.text-bold {
+  @apply bg-blue-100 font-bold;
+}
+
+div.table-main > table > tbody > tr.text-bold > td {
+  @apply border border-gray-300 p-3;
+}
+
+div.table-main > table > tbody > tr {
+  @apply bg-white;
+}
+
+div.table-main > table > tbody > tr > td {
+  @apply border border-gray-300 p-3;
+}
+/* table-main end */
+
+/* table-main-bg-border-none start */
+table.table-main-bg-border-none {
+  @apply w-full;
+}
+
+table.table-main-bg-border-none > thead > tr {
+  @apply text-gray-900;
+}
+
+table.table-main-bg-border-none > thead > tr > th {
+  @apply p-3 text-start font-medium;
+}
+
+table.table-main-bg-border-none > tbody > tr.text-bold {
+  @apply font-bold;
+}
+
+table.table-main-bg-border-none > tbody > tr.text-bold > td {
+  @apply p-3;
+}
+
+table.table-main-bg-border-none > tbody > tr {
+  @apply bg-white;
+}
+
+table.table-main-bg-border-none > tbody > tr > td {
+  @apply p-3;
+}
+/* table-main-bg-border-none end */
+
+/* table-main center start */
+div.table-main-center {
+  @apply overflow-x-auto;
+}
+
+div.table-main-center > table {
+  @apply min-w-full table-fixed;
+}
+
+div.table-main-center > table > thead > tr {
+  @apply bg-blue-200 text-gray-900;
+}
+
+div.table-main-center > table > thead > tr > th {
+  @apply border border-gray-300 p-3 text-center font-medium whitespace-nowrap;
+}
+
+div.table-main-center > table > tbody > tr.text-bold {
+  @apply bg-blue-100 font-bold;
+}
+
+div.table-main-center > table > tbody > tr.text-bold > td {
+  @apply border border-gray-300 p-3;
+}
+
+div.table-main-center > table > tbody > tr {
+  @apply bg-white;
+}
+
+div.table-main-center > table > tbody > tr > td {
+  @apply border border-gray-300 p-3 text-center;
+}
+/* table-main center end */

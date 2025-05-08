@@ -1,0 +1,3 @@
+.icon-warning {
+  @apply text-warning-primary hover:bg-warning-primary hover:text-white;
+}

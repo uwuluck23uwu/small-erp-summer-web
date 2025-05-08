@@ -1,0 +1,133 @@
+/* src/components/Tooltip.css */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip {
+  position: absolute;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 0.375rem;
+  display: none;
+  z-index: 999;
+  /* Position the tooltip at the top center */
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  top: 100%; /* Position the arrow below the tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-container:hover .tooltip {
+  display: block;
+}
+
+.tooltip-right {
+  position: absolute;
+  background-color: #20478e;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 0.375rem;
+  display: none;
+  z-index: 999;
+  top: -10px;
+  left: 65px;
+  /* transform: translateX(-50%); */
+}
+
+.tooltip-container-right {
+  position: relative;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.tooltip-container-right:hover .tooltip-right {
+  display: flex;
+}
+
+.arrow-right {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-right: 8px solid #20478e;
+  border-bottom: 8px solid transparent;
+  border-top: 8px solid transparent;
+  top: 10px;
+  left: -4px;
+  transform: translateX(-50%);
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+
+#resume-detail .tooltip-resume-detail {
+  position: relative;
+  display: inline-block;
+}
+
+#resume-detail .tooltip-resume-detail .tooltiptext-resume-detail {
+  visibility: hidden;
+  width: 180px;
+  background-color: #fdfdfd;
+  color: #000000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 50;
+  top: 120%;
+  left: 130%;
+  margin-left: -60px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+#resume-detail .tooltip-resume-detail .tooltiptext-resume-detail::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 10%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent rgba(0, 0, 0, 0.2) transparent;
+}
+
+#resume-detail .tooltip-resume-detail:hover .tooltiptext-resume-detail {
+  visibility: visible;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+/* bar */
+.tooltip-bar-container {
+  position: relative;
+}
+
+.tooltip-bar {
+  position: absolute;
+  max-width: 250px;
+  border-radius: 0.375rem;
+  display: none;
+  z-index: 999;
+  top: -60px;
+  /* white-space: nowrap; */
+  word-break: keep-all;
+}
+
+.tooltip-bar-container:hover .tooltip-bar {
+  display: block;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
