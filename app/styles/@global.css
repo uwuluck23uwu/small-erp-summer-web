@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap");
+
+/* layout start */
+@import "./footer.css";
+@import "./header.css";
+@import "./layout.css";
+/* layout end */
+@import "./card.css";
+@import "./input.css";
+@import "./table.css";
+@import "./@button.css";
+@import "./@icon.css";
+@import "./@tooltip.css";
+
+@import "tailwindcss";
+
+@theme {
+  /* Color*/
+  --color-steel: #283e4b;
+  --color-sky-blue-primary: #4695ec;
+  --color-warning-primary: #ffab28;
+  --color-success-primary: #12a90f;
+  --color-danger-primary: #ff464a;
+
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+:root {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@layer base {
+  body {
+    font-family: "Mitr", sans-serif !important;
+    font-size: 16px;
+    color: #111721;
+  }
+}
+
+@layer utilities {
+  .responsive-padding-layout {
+    @apply px-4 sm:px-10;
+  }
+
+  /* flex */
+  .wrap-full {
+    @apply flex flex-wrap w-full;
+  }
+
+  .wrap-item-center {
+    @apply flex flex-wrap items-center w-full;
+  }
+
+  /* padding */
+  .pad-between-main {
+    @apply px-2 pt-2 sm:pt-4;
+  }
+
+  .pad-between-main-px-none {
+    @apply pt-2 sm:pt-4;
+  }
+}
+
+@layer components {
+  /* text start*/
+  .text-responsive-s1 {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  .text-responsive-s2 {
+    @apply text-2xl lg:text-3xl xl:text-4xl;
+  }
+
+  .container-title {
+    @apply border-b-2 border-gray-200 flex flex-wrap items-center justify-between pb-3 gap-y-2 mb-5;
+  }
+  /* text end*/
+}

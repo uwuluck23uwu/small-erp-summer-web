@@ -1,0 +1,23 @@
+/* input */
+.input_default,
+.input_success,
+.input_error,
+.input_disabled {
+  @apply text-base;
+}
+
+.input-default {
+  @apply flex w-full items-center justify-center rounded-md border bg-white py-[8px] px-[8px] h-10 outline-none border-gray-400 font-light;
+}
+
+.input-success {
+  @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-green-500 !text-green-500 font-light;
+}
+
+.input-error {
+  @apply flex w-full items-center justify-center rounded-md border bg-white/0 py-[8px] px-[8px] outline-none !border-red-500 !text-red-500 font-light;
+}
+
+.input-disabled {
+  @apply flex w-full items-center justify-center rounded-md border py-[8px] px-[8px] outline-none border-gray-300 !bg-gray-100 cursor-not-allowed focus:invisible font-light;
+}
