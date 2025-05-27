@@ -2,7 +2,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { CreateMyExamEnrollment } from "~/services/ExamSchedule.Service";
 import InputDateFormat from "~/components/@date-picker/InputDateFormat";
-import InputTimeFormat from "~/components/@date-picker/InputTimeFormat";
+// import InputTimeFormat from "~/components/@date-picker/InputTimeFormat";
 import type { ISaveExamData } from "~/@types/assessment/AssessmentMultipleChoice";
 
 export default function FromExamSchedule({
@@ -94,18 +94,24 @@ export default function FromExamSchedule({
                 onChange={(date) => handleScheduleChange(index, "date", date)}
               />
 
-              <InputTimeFormat
+              <input
+                type="time"
                 value={schedule.startTime}
-                onChange={(time) =>
-                  handleScheduleChange(index, "startTime", time)
+                onChange={(e) =>
+                  handleScheduleChange(index, "startTime", e.target.value)
                 }
+                className="border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200 ml-5"
+                required
               />
 
-              <InputTimeFormat
+              <input
+                type="time"
                 value={schedule.endTime}
-                onChange={(time) =>
-                  handleScheduleChange(index, "endTime", time)
+                onChange={(e) =>
+                  handleScheduleChange(index, "endTime", e.target.value)
                 }
+                className="border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200"
+                required
               />
             </div>
           ))}
@@ -132,6 +138,10 @@ export default function FromExamSchedule({
 
               try {
                 const result = await CreateMyExamEnrollment(saveData);
+                console.log(
+                  "ผลลัพธ์การบันทึก:",
+                  JSON.stringify(result, null, 2)
+                );
                 onClose();
                 onSuccess();
               } catch (error) {

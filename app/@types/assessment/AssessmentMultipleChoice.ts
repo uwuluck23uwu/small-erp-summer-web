@@ -67,10 +67,17 @@ interface IExamSchedule {
   startTime: string;
   endTime: string;
   totalQuestions: number;
-  status: number;
+  status: number | string;
   statusName: string;
-  createdDate: string;
-  updatedDate: string;
+  createdDate?: string;
+  updatedDate?: string;
+
+  reschedules?: {
+    scheduleDate: string;
+    startTime: string;
+    endTime: string;
+    reason?: string;
+  }[];
 }
 
 export interface IExamData {

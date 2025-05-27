@@ -45,7 +45,6 @@ export default function ExamSchedule() {
     setIsOpenModalExplanation(!isOpenModalExplanation);
   }
 
-  //ดึงข้อมูลการจัดการตารางสอบ
   async function fetchExamEnrollment(
     pageSize: number,
     currentPage: number,
@@ -97,6 +96,7 @@ export default function ExamSchedule() {
         loading={loading}
         pagin={pagin}
         data={data}
+        onhandleExam={handleExam}
         onhandleExamScheduling={(val: any) => {
           setSelectedSchedule(val);
           setIsOpenModalExplanation(true);

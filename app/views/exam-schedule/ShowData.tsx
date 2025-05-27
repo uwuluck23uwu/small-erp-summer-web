@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 import type { IPagin } from "~/@types/@global";
 import type { IExamData } from "~/@types/assessment/AssessmentMultipleChoice";
@@ -20,6 +21,8 @@ export default function ShowData({
   pagin,
   loading,
 }: Props) {
+  const navigate = useNavigate();
+
   let rowIndex = 0;
   function convertThaiDateToISO(thaiDate: string): string {
     const thaiMonths: { [key: string]: string } = {
@@ -42,7 +45,7 @@ export default function ShowData({
 
     const day = parts[0].padStart(2, "0");
     const month = thaiMonths[parts[1]];
-    const year = (parseInt(parts[2], 10) - 543).toString(); // Convert Buddhist year to Gregorian
+    const year = (parseInt(parts[2], 10) - 543).toString();
 
     if (!month) throw new Error(`Invalid Thai month: ${parts[1]}`);
 
@@ -130,36 +133,47 @@ export default function ShowData({
                     {items.examSchedules?.map(
                       (itemsSchedule, IndexSchedule) => {
                         rowIndex++;
+                        const reschedules = itemsSchedule.reschedules ?? [];
+
                         return (
-                          <tr key={IndexSchedule}>
-                            <td>
-                              {CommaNumber(
-                                (pagin.currentPage - 1) * pagin.pageSize +
-                                  rowIndex
-                              )}
-                            </td>
-                            <td>
-                              <p className="whitespace-nowrap">
-                                {itemsSchedule.scheduleDate ?? ""}
-                              </p>
-                            </td>
-                            <td>
-                              <p className="whitespace-nowrap">
-                                {FormatTime(itemsSchedule.startTime)} -{" "}
-                                {FormatTime(itemsSchedule.endTime)} น.
-                              </p>
-                            </td>
-                            <td>{itemsSchedule.totalQuestions}</td>
-                            <td>
-                              <div className="whitespace-nowrap">
-                                {itemsSchedule.status.toString() == "1"
-                                  ? "สอบแล้ว"
-                                  : "ยังไม่ได้สอบ"}
-                              </div>
-                            </td>
-                            <td>
-                              <div className="flex justify-center">
-                                {data?.length > 0 && (
+                          <Fragment key={IndexSchedule}>
+                            <tr>
+                              <td>
+                                {CommaNumber(
+                                  (pagin.currentPage - 1) * pagin.pageSize +
+                                    rowIndex
+                                )}
+                              </td>
+                              <td>
+                                <p className="whitespace-nowrap">
+                                  {itemsSchedule.scheduleDate ?? ""}
+                                </p>
+                              </td>
+                              <td>
+                                <p className="whitespace-nowrap">
+                                  {FormatTime(itemsSchedule.startTime)} -{" "}
+                                  {FormatTime(itemsSchedule.endTime)} น.
+                                </p>
+                              </td>
+                              <td>{itemsSchedule.totalQuestions}</td>
+                              <td>
+                                <div className="whitespace-nowrap">
+                                  {(() => {
+                                    switch (itemsSchedule.status.toString()) {
+                                      case "0":
+                                        return "ยังไม่ได้สอบ";
+                                      case "1":
+                                        return "สอบแล้ว";
+                                      case "2":
+                                        return "เลื่อนเวลาสอบ";
+                                      default:
+                                        return "ไม่ได้สอบ";
+                                    }
+                                  })()}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="flex justify-center">
                                   <Button
                                     onClick={() =>
                                       onhandleExamScheduling({
@@ -170,7 +184,7 @@ export default function ShowData({
                                         endTime: itemsSchedule.endTime,
                                         totalQuestions:
                                           itemsSchedule.totalQuestions,
-                                        reason: "",
+                                        reason: reschedules?.[0]?.reason ?? "",
                                       })
                                     }
                                     type="button"
@@ -178,66 +192,46 @@ export default function ShowData({
                                     btntext="ขอเลื่อนสอบ"
                                     iconName="icon-add"
                                   />
-                                )}
-                              </div>
 
-                              {/* <div className="container-btn-manage">
-                                {itemsSchedule.status === 0 && (
-                                  <div className="flex justify-center">
-                                    <Button
-                                      onClick={() => {
-                                        const _check = isWithinSchedule(
-                                          convertThaiDateToISO(
-                                            itemsSchedule.scheduleDate
-                                          ),
-                                          itemsSchedule.startTime,
-                                          itemsSchedule.endTime
-                                        );
-                                        if (_check) {
-                                          onhandleExamScheduling({
-                                            enrollmentId: items.enrollmentId,
-                                            scheduleId:
-                                              itemsSchedule.scheduleId,
-                                            totalQuestions:
-                                              itemsSchedule.totalQuestions,
-                                            startTime: itemsSchedule.startTime,
-                                            endTime: itemsSchedule.endTime,
-                                            examsetId: items.examSet.examsetId,
-                                          });
-                                        } else {
-                                          const title =
-                                            "ไม่อยู่ในเวลาช่วงเวลา <br>" +
-                                            itemsSchedule.scheduleDate +
-                                            " (" +
-                                            FormatTime(
-                                              itemsSchedule.startTime
-                                            ) +
-                                            "-" +
-                                            FormatTime(itemsSchedule.endTime) +
-                                            ")";
-                                          // AlertMessage({
-                                          //   type: "warning",
-                                          //   title: title,
-                                          //   showConfirmButton: true,
-                                          // });
-                                        }
-                                      }}
-                                      type="button"
-                                      styleButton="icon-warning"
-                                      iconName="icon-add"
-                                      tooltipStyle="warning"
-                                      tooltipText="ทำแบบทดสอบ"
-                                    />
+                                  <Button
+                                    onClick={() => {
+                                      navigate(`/assessment-history/`);
+                                    }}
+                                    type="button"
+                                    styleButton="btn-blue"
+                                    btntext="ทำแบบทดสอบ"
+                                    iconName="icon-add"
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+
+                            {/* 🟨 แถวใหม่แสดงเวลาเลื่อน */}
+                            {reschedules.length > 0 && (
+                              <tr className="bg-gray-50 text-sm text-gray-600">
+                                <td></td>
+                                <td colSpan={5}>
+                                  <div className="pl-4">
+                                    <p
+                                      className={`whitespace-nowrap ${
+                                        reschedules.length > 0
+                                          ? "line-through text-red-500"
+                                          : ""
+                                      }`}
+                                    >
+                                      <strong>เวลาเก่า:</strong>{" "}
+                                      {FormatTime(reschedules[0].startTime)} -{" "}
+                                      {FormatTime(reschedules[0].endTime)} น.
+                                    </p>
+                                    <p>
+                                      <strong>เหตุผล:</strong>{" "}
+                                      {reschedules[0].reason ?? "-"}
+                                    </p>
                                   </div>
-                                )}
-                                {itemsSchedule.status === 1 && (
-                                  <div className="flex justify-center">
-                                    <Button linkPage="/exam-result-uoc" type="button" styleButton="icon-success" iconName="icon-chart" tooltipStyle="success" tooltipText="ผลการประเมิน" />
-                                  </div>
-                                )}
-                              </div> */}
-                            </td>
-                          </tr>
+                                </td>
+                              </tr>
+                            )}
+                          </Fragment>
                         );
                       }
                     )}

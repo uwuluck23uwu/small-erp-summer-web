@@ -44,21 +44,17 @@ export default function FormReExamSchedule({
       return;
     }
 
-    const scheduleId = 1;
-
-    const [hour, minute] = startTime.split(":");
-    const timeString = (h: string, m: string) =>
-      `${h.padStart(2, "0")}:${m.padStart(2, "0")}:00`;
+    const timeString = (time: string) => `${time}:00`;
 
     const payload = {
-      scheduleId,
+      scheduleId: initialData.scheduleId,
       scheduleDate: convertBuddhistToGregorian(date),
-      startTime: timeString(hour, minute),
-      endTime: timeString(hour, String(Number(minute) + 30)),
+      startTime: timeString(startTime),
+      endTime: timeString(endTime),
       reason,
     };
 
-    console.log("จะส่ง payload →", payload);
+    console.log("จะส่ง payload →", JSON.stringify(payload, null, 2));
 
     try {
       await UpdateExamSchedule(payload);
