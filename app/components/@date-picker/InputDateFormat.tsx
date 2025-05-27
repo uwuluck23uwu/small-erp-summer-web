@@ -21,17 +21,68 @@ type Props = {
   touched?: any;
 };
 
-function InputDateFormat({ minDate, maxDate, title = "", placeholder = "วว/ดด/ปปปป", disabled = false, name = "", id = "", className = "input_default", onChange, value = "", stroke = "", classCalendar = "", titleElement, error, touched, ...props }: Props) {
+function InputDateFormat({
+  minDate,
+  maxDate,
+  title = "",
+  placeholder = "วว/ดด/ปปปป",
+  disabled = false,
+  name = "",
+  id = "",
+  className = "input_default",
+  onChange,
+  value = "",
+  stroke = "",
+  classCalendar = "",
+  titleElement,
+  error,
+  touched,
+  ...props
+}: Props) {
   const ref = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpenCalendar, setOpenCalendar] = useState<boolean>(false);
   const [defaultValue, setDefaultValue] = useState<string>("");
-  const [position, setPosition] = useState<'top' | 'bottom'>('bottom');
-  const [calendarClassName, setCalendarClassName] = useState<string>(classCalendar);
+  const [position, setPosition] = useState<"top" | "bottom">("bottom");
+  const [calendarClassName, setCalendarClassName] =
+    useState<string>(classCalendar);
+
+  function formatToThaiDate(dateStr: string): string {
+    const monthsThai = [
+      "ม.ค",
+      "ก.พ",
+      "มี.ค",
+      "เม.ย",
+      "พ.ค",
+      "มิ.ย",
+      "ก.ค",
+      "ส.ค",
+      "ก.ย",
+      "ต.ค",
+      "พ.ย",
+      "ธ.ค",
+    ];
+
+    const parts = dateStr.split("/");
+    if (parts.length !== 3) return dateStr;
+
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+
+    if (!day || !month || !year) return dateStr;
+
+    return `${day} ${monthsThai[month - 1]} ${year}`;
+  }
 
   useEffect(() => {
     const checkIfClickedOutside = (e: any) => {
-      if (isOpenCalendar && ref.current && !ref.current.contains(e.target) && !disabled) {
+      if (
+        isOpenCalendar &&
+        ref.current &&
+        !ref.current.contains(e.target) &&
+        !disabled
+      ) {
         setOpenCalendar(!isOpenCalendar);
       }
     };
@@ -42,7 +93,11 @@ function InputDateFormat({ minDate, maxDate, title = "", placeholder = "วว/�
   }, [disabled, isOpenCalendar]);
 
   useEffect(() => {
-    setDefaultValue(value ?? "");
+    if (value && isValidDateFormat(value)) {
+      setDefaultValue(formatToThaiDate(value));
+    } else {
+      setDefaultValue(value ?? "");
+    }
   }, [value]);
 
   useEffect(() => {
@@ -53,10 +108,10 @@ function InputDateFormat({ minDate, maxDate, title = "", placeholder = "วว/�
       const calendarHeight = 300;
 
       if (spaceBelow < calendarHeight && spaceAbove > calendarHeight) {
-        setPosition('top');
+        setPosition("top");
         setCalendarClassName(`${classCalendar} absolute bottom-full`);
       } else {
-        setPosition('bottom');
+        setPosition("bottom");
         setCalendarClassName(`${classCalendar} absolute top-full`);
       }
     }
@@ -67,8 +122,16 @@ function InputDateFormat({ minDate, maxDate, title = "", placeholder = "วว/�
       const pattern = /^\d{2}\/\d{2}\/\d{4}$/;
       if (pattern.test(dateString)) {
         const parts = dateString.split("/");
-        const day = (parseInt(parts[0], 10) < 10 ? `0${parseInt(parts[0], 10)}` : parseInt(parts[0], 10)).toString();
-        const month = (parseInt(parts[1], 10) < 10 ? `0${parseInt(parts[1], 10)}` : parseInt(parts[1], 10)).toString();
+        const day = (
+          parseInt(parts[0], 10) < 10
+            ? `0${parseInt(parts[0], 10)}`
+            : parseInt(parts[0], 10)
+        ).toString();
+        const month = (
+          parseInt(parts[1], 10) < 10
+            ? `0${parseInt(parts[1], 10)}`
+            : parseInt(parts[1], 10)
+        ).toString();
         const year = (parseInt(parts[2], 10) - 543).toString();
         return moment(`${day}/${month}/${year}`, "DD/MM/YYYY", true).isValid();
       } else {
@@ -82,7 +145,9 @@ function InputDateFormat({ minDate, maxDate, title = "", placeholder = "วว/�
   return (
     <div ref={ref} className="w-full relative">
       <div className="flex justify-between">
-        <label htmlFor={name} className="font-light">{title}</label>
+        <label htmlFor={name} className="font-light">
+          {title}
+        </label>
         {titleElement && titleElement}
       </div>
       <div className="relative z-0">
@@ -95,7 +160,15 @@ function InputDateFormat({ minDate, maxDate, title = "", placeholder = "วว/�
           // readOnly={true}
           autoComplete="off"
           value={defaultValue}
-          className={`placeholder-black pl-8 w-full ${disabled && "input-disabled"} ${className} ${touched ? error ? "input-error" : "input-success" : "input-default"} min-w-[140px] !pl-8`}
+          className={`placeholder-black pl-8 w-full ${
+            disabled && "input-disabled"
+          } ${className} ${
+            touched
+              ? error
+                ? "input-error"
+                : "input-success"
+              : "input-default"
+          } min-w-[140px] !pl-8`}
           type="text"
           placeholder={placeholder}
           onClick={() => setOpenCalendar(!isOpenCalendar)}
@@ -129,6 +202,7 @@ function InputDateFormat({ minDate, maxDate, title = "", placeholder = "วว/�
         value={value}
         onChange={(e) => {
           onChange(e);
+          setDefaultValue(formatToThaiDate(e));
           setOpenCalendar(!isOpenCalendar);
         }}
         position={position}
@@ -142,7 +216,14 @@ export default InputDateFormat;
 
 function SVGPDatePicker({ stroke = "" }) {
   return (
-    <svg className={`icon icon-tabler icon-tabler-calendar-event ${stroke}`} width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      className={`icon icon-tabler icon-tabler-calendar-event ${stroke}`}
+      width="13"
+      height="14"
+      viewBox="0 0 13 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M2.13314 13.6667C1.76647 13.6667 1.45258 13.5361 1.19147 13.275C0.93036 13.0139 0.799805 12.7 0.799805 12.3333V2.99999C0.799805 2.63333 0.93036 2.31944 1.19147 2.05833C1.45258 1.79722 1.76647 1.66666 2.13314 1.66666H2.7998V0.333328H4.13314V1.66666H9.46647V0.333328H10.7998V1.66666H11.4665C11.8331 1.66666 12.147 1.79722 12.4081 2.05833C12.6692 2.31944 12.7998 2.63333 12.7998 2.99999V12.3333C12.7998 12.7 12.6692 13.0139 12.4081 13.275C12.147 13.5361 11.8331 13.6667 11.4665 13.6667H2.13314ZM2.13314 12.3333H11.4665V5.66666H2.13314V12.3333ZM2.13314 4.33333H11.4665V2.99999H2.13314V4.33333Z"
         fill="#212121"

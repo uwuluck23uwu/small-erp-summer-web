@@ -19,11 +19,11 @@ export default function ExamSchedule() {
     totalPages: 1,
   });
   const [data, setData] = useState<IExamData[]>([]);
+  const [selectedSchedule, setSelectedSchedule] = useState<any | null>(null);
   const [isOpenModalScheduling, setIsOpenModalScheduling] =
     useState<boolean>(false);
   const [isOpenModalExplanation, setIsOpenModalExplanation] =
     useState<boolean>(false);
-  const [selectedSchedule, setSelectedSchedule] = useState<any | null>(null);
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -97,7 +97,6 @@ export default function ExamSchedule() {
         loading={loading}
         pagin={pagin}
         data={data}
-        onhandleExam={handleSche}
         onhandleExamScheduling={(val: any) => {
           setSelectedSchedule(val);
           setIsOpenModalExplanation(true);

@@ -1,17 +1,15 @@
 import { Fragment } from "react/jsx-runtime";
 import type { IPagin } from "~/@types/@global";
-import { CommaNumber, FormatTime } from "~/helpers/Convert";
-import AnimateEmptyData from "~/components/@animate-emptydata/AnimateEmptyData";
-import AnimateNodata from "../../components/@animate-emptydata/AnimateEmptyData";
-import Button from "~/components/@button/Button";
 import type { IExamData } from "~/@types/assessment/AssessmentMultipleChoice";
-import { useState } from "react";
+import { CommaNumber, FormatTime } from "~/helpers/Convert";
+import Button from "~/components/@button/Button";
+import AnimateNodata from "../../components/@animate-emptydata/AnimateEmptyData";
 
 type Props = {
   loading: boolean;
   pagin: IPagin;
   data: IExamData[];
-  onhandleExam: () => void;
+  onhandleExam?: () => void;
   onhandleExamScheduling: any;
 };
 
