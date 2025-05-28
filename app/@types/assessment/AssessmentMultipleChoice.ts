@@ -132,3 +132,40 @@ export interface IExamReschedulesRequest {
   endTime: string;
   reason: string;
 }
+
+export interface EsMultipleChoiceQuestion {
+  questionId: number;
+  questionText: string;
+  choiceA: string;
+  choiceB: string;
+  choiceC: string;
+  choiceD: string;
+  correctAnswer: string;
+  stdGroup: string;
+  stdType: string;
+  refStdId: string;
+  difficulty: string;
+  createdDate: string;
+  createdBy: string;
+  updatedDate?: string;
+  updatedBy: string;
+  isUsed: string;
+}
+
+export interface ExamQuizReq {
+  enrollmentId: number;
+  scheduleId: number;
+  createdBy: string;
+  startedTime: Date;
+  submittedTime: Date;
+  listQuiz: {
+    id: number;
+    answer: string;
+  }[];
+}
+
+export interface ExamHistoryReq {
+  personId: number;
+  pageSize: number;
+  currentPage: number;
+}

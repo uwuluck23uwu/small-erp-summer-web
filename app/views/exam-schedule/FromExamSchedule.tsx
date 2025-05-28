@@ -1,8 +1,6 @@
 import { useState } from "react";
-import dayjs from "dayjs";
 import { CreateMyExamEnrollment } from "~/services/ExamSchedule.Service";
 import InputDateFormat from "~/components/@date-picker/InputDateFormat";
-// import InputTimeFormat from "~/components/@date-picker/InputTimeFormat";
 import type { ISaveExamData } from "~/@types/assessment/AssessmentMultipleChoice";
 
 export default function FromExamSchedule({
@@ -16,6 +14,14 @@ export default function FromExamSchedule({
   const [examSchedules, setExamSchedules] = useState([
     { date: "", startTime: "", endTime: "" },
   ]);
+
+  function getTodayThaiFormat(): string {
+    const today = new Date();
+    const day = today.getDate().toString().padStart(2, "0");
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const year = (today.getFullYear() + 543).toString(); // แปลงเป็น พ.ศ.
+    return `${day}/${month}/${year}`;
+  }
 
   function handleScheduleChange(
     index: number,
@@ -92,6 +98,7 @@ export default function FromExamSchedule({
               <InputDateFormat
                 value={schedule.date}
                 onChange={(date) => handleScheduleChange(index, "date", date)}
+                minDate={getTodayThaiFormat()}
               />
 
               <input

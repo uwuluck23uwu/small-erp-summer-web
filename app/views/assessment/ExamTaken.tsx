@@ -1,185 +1,77 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { GetMultipleChoiceQuestion } from "~/services/MultipleChoiceQuestion.Service";
+import type { EsMultipleChoiceQuestion } from "~/@types/assessment/AssessmentMultipleChoice";
 
-const mockQuestions = [
-  {
-    id: 1,
-    question: "HTML ย่อมาจากอะไร?",
-    options: [
-      "Hyper Trainer Marking Language",
-      "Hyper Text Markup Language",
-      "Hyper Text Marketing Language",
-      "Hyper Text Markup Leveler",
-    ],
-  },
-  {
-    id: 2,
-    question: "CSS ใช้ทำอะไรในเว็บ?",
-    options: [
-      "ควบคุมโครงสร้างของเว็บ",
-      "จัดรูปแบบการแสดงผล",
-      "เก็บข้อมูลในเว็บ",
-      "เขียนคำสั่งเงื่อนไข",
-    ],
-  },
-  {
-    id: 3,
-    question: "JavaScript ทำงานฝั่งใด?",
-    options: [
-      "Server-side เท่านั้น",
-      "Client-side เท่านั้น",
-      "ทั้ง Client-side และ Server-side",
-      "ไม่สามารถทำงานได้บนเว็บ",
-    ],
-  },
-  {
-    id: 4,
-    question: "React เป็นอะไร?",
-    options: [
-      "Framework สำหรับ Backend",
-      "Library สำหรับจัดการ UI",
-      "ฐานข้อมูล",
-      "เครื่องมือเขียนเกม",
-    ],
-  },
-  {
-    id: 5,
-    question: "ข้อใดคือชนิดข้อมูลใน JavaScript?",
-    options: ["float", "boolean", "double", "char"],
-  },
-  {
-    id: 6,
-    question: "ข้อใดคือการประกาศตัวแปรแบบ ES6?",
-    options: ["var", "define", "let", "const let"],
-  },
-  {
-    id: 7,
-    question: "DOM ย่อมาจากอะไร?",
-    options: [
-      "Document Object Model",
-      "Display Output Module",
-      "Data Object Manager",
-      "Document Order Method",
-    ],
-  },
-  {
-    id: 8,
-    question: "คำสั่ง `console.log()` ใช้ทำอะไร?",
-    options: [
-      "รับค่าจากผู้ใช้",
-      "แสดงผลในหน้าเว็บ",
-      "แสดงผลใน console",
-      "เก็บค่าตัวแปร",
-    ],
-  },
-  {
-    id: 9,
-    question: "อะไรคือ JSX?",
-    options: [
-      "ภาษาโปรแกรมใหม่",
-      "ภาษาสำหรับจัดการฐานข้อมูล",
-      "JavaScript ที่มี XML/HTML ผสม",
-      "รูปแบบของ CSS",
-    ],
-  },
-  {
-    id: 10,
-    question: "Blazor ใช้ภาษาอะไรเขียน?",
-    options: ["C#", "Python", "Java", "JavaScript"],
-  },
-  {
-    id: 11,
-    question: "React ใช้หลักการอะไร?",
-    options: ["MVC", "Virtual DOM", "Routing Engine", "OOP Interface"],
-  },
-  {
-    id: 12,
-    question: "ข้อใดไม่ใช่ภาษาในเว็บมาตรฐาน?",
-    options: ["HTML", "CSS", "JavaScript", "Python"],
-  },
-  {
-    id: 13,
-    question: "อะไรคือ component ใน React?",
-    options: [
-      "คลาสสำหรับจัดการ Routing",
-      "ฟังก์ชัน/คลาสที่ใช้สร้าง UI แบบแยกส่วน",
-      "ฐานข้อมูลเฉพาะของ React",
-      "ไฟล์ HTML",
-    ],
-  },
-  {
-    id: 14,
-    question: "State ใน React คืออะไร?",
-    options: [
-      "ค่าคงที่",
-      "ตัวแปรที่เปลี่ยนค่าไม่ได้",
-      "ข้อมูลภายใน component ที่สามารถเปลี่ยนแปลงได้",
-      "ค่าจาก API",
-    ],
-  },
-  {
-    id: 15,
-    question: "Tailwind CSS คืออะไร?",
-    options: [
-      "Framework เขียน backend",
-      "UI library ของ React",
-      "CSS Utility-first Framework",
-      "Theme สำเร็จรูป",
-    ],
-  },
-  {
-    id: 16,
-    question: "คำสั่ง fetch() ใช้เพื่ออะไร?",
-    options: [
-      "ดึงข้อมูลจาก API",
-      "ประกาศตัวแปร",
-      "แสดงข้อมูลบนหน้าเว็บ",
-      "สร้าง Element ใหม่",
-    ],
-  },
-  {
-    id: 17,
-    question: "ข้อใดคือ HTTP Method?",
-    options: ["POST", "FETCH", "REACT", "CLICK"],
-  },
-  {
-    id: 18,
-    question: "React Native ใช้สร้างแอปอะไร?",
-    options: [
-      "แอปเฉพาะ Android",
-      "แอปบนเว็บ",
-      "แอปมือถือทั้ง iOS และ Android",
-      "Desktop app",
-    ],
-  },
-  {
-    id: 19,
-    question: "คำว่า MVC ย่อมาจากอะไร?",
-    options: [
-      "Model View Controller",
-      "Module Visual Center",
-      "Manage View Code",
-      "Main Virtual Core",
-    ],
-  },
-  {
-    id: 20,
-    question: "Git ใช้ทำอะไร?",
-    options: [
-      "จัดการเวอร์ชันของโค้ด",
-      "จัดการฐานข้อมูล",
-      "ออกแบบ UI",
-      "รันเว็บเซิร์ฟเวอร์",
-    ],
-  },
-];
+const MySwal = withReactContent(Swal);
+
+interface IQuestion {
+  id: number;
+  question: string;
+  options: string[];
+}
 
 export default function ExamTaken() {
+  const navigate = useNavigate();
+  const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<(string | null)[]>(
-    Array(mockQuestions.length).fill(null)
-  );
+  const [answers, setAnswers] = useState<(string | null)[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(60 * 60);
 
-  const currentQuestion = mockQuestions[currentIndex];
+  useEffect(() => {
+    if (loading) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+
+          // ใช้ SweetAlert แทน alert
+          MySwal.fire({
+            title: "⏰ หมดเวลา!",
+            text: "ระบบจะส่งคุณไปยังหน้าผลสอบ",
+            icon: "warning",
+            confirmButtonText: "ไปต่อ",
+            allowOutsideClick: false,
+          }).then(() => {
+            navigate("/assessment-history");
+          });
+
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [loading, navigate]);
+
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        const response = await GetMultipleChoiceQuestion(40, 1);
+        const rawQuestions: EsMultipleChoiceQuestion[] = response.data;
+
+        const formatted = rawQuestions.map((q) => ({
+          id: q.questionId,
+          question: q.questionText,
+          options: [q.choiceA, q.choiceB, q.choiceC, q.choiceD],
+        }));
+
+        setQuestions(formatted);
+        setAnswers(Array(formatted.length).fill(null));
+        setLoading(false);
+      } catch (error) {
+        console.error("โหลดคำถามล้มเหลว:", error);
+        setLoading(false);
+      }
+    }
+
+    fetchQuestions();
+  }, []);
 
   const handleSelect = (option: string) => {
     const newAnswers = [...answers];
@@ -188,23 +80,59 @@ export default function ExamTaken() {
   };
 
   const handleNext = () => {
-    if (currentIndex < mockQuestions.length - 1)
+    if (currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
+    }
   };
 
   const handlePrev = () => {
-    if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
   };
 
   const handleSubmit = () => {
-    alert("ส่งคำตอบเรียบร้อย!");
+    MySwal.fire({
+      title: "ส่งคำตอบแล้ว!",
+      icon: "success",
+      confirmButtonText: "ไปหน้าผลสอบ",
+    }).then(() => {
+      console.log("คำตอบทั้งหมด:", answers);
+      navigate("/exam-summary");
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen text-lg text-gray-500">
+        กำลังโหลดคำถาม...
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-screen text-red-500 text-lg">
+        ไม่พบคำถาม
+      </div>
+    );
+  }
+
+  const currentQuestion = questions[currentIndex];
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s} นาที`;
   };
 
   return (
     <div className="flex h-screen bg-gray-100 p-6 gap-6">
       <div className="flex-1 bg-white rounded-lg shadow p-6">
         <div className="text-lg font-semibold mb-2">
-          ข้อที่ {currentIndex + 1} จาก {mockQuestions.length}
+          ข้อที่ {currentIndex + 1} จาก {questions.length}
         </div>
 
         <div className="text-xl font-bold mb-4">{currentQuestion.question}</div>
@@ -236,7 +164,7 @@ export default function ExamTaken() {
           >
             ย้อนกลับ
           </button>
-          {currentIndex === mockQuestions.length - 1 ? (
+          {currentIndex === questions.length - 1 ? (
             <button
               onClick={handleSubmit}
               className="px-6 py-2 bg-sky-600 text-white rounded shadow hover:bg-sky-700"
@@ -256,11 +184,11 @@ export default function ExamTaken() {
 
       <div className="w-64 flex flex-col gap-4">
         <div className="bg-blue-700 text-white text-center py-2 rounded-lg shadow">
-          เหลือเวลา 59:45 นาที
+          เหลือเวลา {formatTime(timeLeft)}
         </div>
 
         <div className="bg-white p-4 rounded-lg shadow grid grid-cols-5 gap-2">
-          {Array.from({ length: mockQuestions.length }, (_, i) => (
+          {questions.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentIndex(i)}

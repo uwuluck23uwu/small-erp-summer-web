@@ -150,10 +150,19 @@ export default function ShowData({
                                 </p>
                               </td>
                               <td>
-                                <p className="whitespace-nowrap">
-                                  {FormatTime(itemsSchedule.startTime)} -{" "}
-                                  {FormatTime(itemsSchedule.endTime)} น.
-                                </p>
+                                <div className="flex-col items-start whitespace-nowrap">
+                                  {reschedules.length > 0 && (
+                                    <p className="text-xs text-red-500 line-through">
+                                      เวลาเก่า:{" "}
+                                      {FormatTime(reschedules[0].startTime)} -{" "}
+                                      {FormatTime(reschedules[0].endTime)} น.
+                                    </p>
+                                  )}
+                                  <p className="font-medium text-gray-800">
+                                    {FormatTime(itemsSchedule.startTime)} -{" "}
+                                    {FormatTime(itemsSchedule.endTime)} น.
+                                  </p>
+                                </div>
                               </td>
                               <td>{itemsSchedule.totalQuestions}</td>
                               <td>
@@ -173,7 +182,7 @@ export default function ShowData({
                                 </div>
                               </td>
                               <td>
-                                <div className="flex justify-center">
+                                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                                   <Button
                                     onClick={() =>
                                       onhandleExamScheduling({
@@ -206,25 +215,13 @@ export default function ShowData({
                               </td>
                             </tr>
 
-                            {/* 🟨 แถวใหม่แสดงเวลาเลื่อน */}
                             {reschedules.length > 0 && (
                               <tr className="bg-gray-50 text-sm text-gray-600">
                                 <td></td>
                                 <td colSpan={5}>
                                   <div className="pl-4">
-                                    <p
-                                      className={`whitespace-nowrap ${
-                                        reschedules.length > 0
-                                          ? "line-through text-red-500"
-                                          : ""
-                                      }`}
-                                    >
-                                      <strong>เวลาเก่า:</strong>{" "}
-                                      {FormatTime(reschedules[0].startTime)} -{" "}
-                                      {FormatTime(reschedules[0].endTime)} น.
-                                    </p>
                                     <p>
-                                      <strong>เหตุผล:</strong>{" "}
+                                      <strong>เหตุผลการเลื่อนสอบ:</strong>{" "}
                                       {reschedules[0].reason ?? "-"}
                                     </p>
                                   </div>

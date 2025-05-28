@@ -38,6 +38,14 @@ export default function FormReExamSchedule({
       .format("YYYY-MM-DD");
   }
 
+  function getTodayThaiFormat(): string {
+    const today = new Date();
+    const day = today.getDate().toString().padStart(2, "0");
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const year = (today.getFullYear() + 543).toString(); // แปลงเป็น พ.ศ.
+    return `${day}/${month}/${year}`;
+  }
+
   const handleSubmit = async () => {
     setTouchedReason(true);
     if (!reason || !date || !startTime) {
@@ -91,7 +99,7 @@ export default function FormReExamSchedule({
             วันที่
           </label>
           <div className="col-span-5">
-            <InputDateFormat value={date} onChange={(d) => setDate(d)} />
+            <InputDateFormat value={date} onChange={(d) => setDate(d)} minDate={getTodayThaiFormat()} />
           </div>
         </div>
 
