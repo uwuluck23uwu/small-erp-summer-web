@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { GetMultipleChoiceQuestion } from "~/services/MultipleChoiceQuestion.Service";
+import {
+  GetMultipleChoiceQuestion,
+  SaveExamQuiz,
+} from "~/services/MultipleChoiceQuestion.Service";
 import type { EsMultipleChoiceQuestion } from "~/@types/assessment/AssessmentMultipleChoice";
 
 const MySwal = withReactContent(Swal);
@@ -29,7 +32,6 @@ export default function ExamTaken() {
         if (prev <= 1) {
           clearInterval(timer);
 
-          // ใช้ SweetAlert แทน alert
           MySwal.fire({
             title: "⏰ หมดเวลา!",
             text: "ระบบจะส่งคุณไปยังหน้าผลสอบ",
@@ -37,7 +39,7 @@ export default function ExamTaken() {
             confirmButtonText: "ไปต่อ",
             allowOutsideClick: false,
           }).then(() => {
-            navigate("/assessment-history");
+            navigate("/exam-summary");
           });
 
           return 0;
@@ -52,7 +54,7 @@ export default function ExamTaken() {
   useEffect(() => {
     async function fetchQuestions() {
       try {
-        const response = await GetMultipleChoiceQuestion(40, 1);
+        const response = await GetMultipleChoiceQuestion(1, 1);
         const rawQuestions: EsMultipleChoiceQuestion[] = response.data;
 
         const formatted = rawQuestions.map((q) => ({
@@ -91,15 +93,48 @@ export default function ExamTaken() {
     }
   };
 
-  const handleSubmit = () => {
-    MySwal.fire({
-      title: "ส่งคำตอบแล้ว!",
-      icon: "success",
-      confirmButtonText: "ไปหน้าผลสอบ",
-    }).then(() => {
-      console.log("คำตอบทั้งหมด:", answers);
-      navigate("/exam-summary");
-    });
+  const handleSubmit = async () => {
+    const unanswered = answers.some((a) => a === null);
+    if (unanswered) {
+      MySwal.fire({
+        title: "ยังตอบไม่ครบทุกข้อ",
+        text: "กรุณาตอบทุกข้อก่อนส่งคำตอบ",
+        icon: "warning",
+      });
+      return;
+    }
+
+    const now = new Date();
+
+    const payload = {
+      enrollmentId: 1,
+      scheduleId: 1,
+      createdBy: "student@example.com",
+      startedTime: now,
+      submittedTime: now,
+      listQuiz: questions.map((q, i) => ({
+        id: q.id,
+        answer: answers[i] || "",
+      })),
+    };
+
+    try {
+      await SaveExamQuiz(payload);
+      MySwal.fire({
+        title: "ส่งคำตอบแล้ว!",
+        icon: "success",
+        confirmButtonText: "ไปหน้าผลสอบ",
+      }).then(() => {
+        navigate("/exam-summary");
+      });
+    } catch (error) {
+      console.error("ส่งคำตอบล้มเหลว:", error);
+      MySwal.fire({
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถส่งคำตอบได้ กรุณาลองใหม่",
+        icon: "error",
+      });
+    }
   };
 
   if (loading) {

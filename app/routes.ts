@@ -11,6 +11,7 @@ export default [
     route("login", "views/authen/Login.tsx"),
     route("register", "views/authen/Register.tsx"),
     route("assessment-history", "views/assessment/AssessmentHistory.tsx"),
+    route("exam-summary", "views/assessment/ExamSummary.tsx"),
     route("exam-taken", "views/assessment/ExamTaken.tsx"),
     route("exam-history", "views/exam-history/ExamHistory.tsx"),
     route("exam-schedule", "views/exam-schedule/ExamSchedule.tsx"),

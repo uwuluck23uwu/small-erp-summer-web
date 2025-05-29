@@ -42,7 +42,7 @@ export default function FormReExamSchedule({
     const today = new Date();
     const day = today.getDate().toString().padStart(2, "0");
     const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const year = (today.getFullYear() + 543).toString(); // แปลงเป็น พ.ศ.
+    const year = (today.getFullYear() + 543).toString();
     return `${day}/${month}/${year}`;
   }
 
